@@ -1,0 +1,103 @@
+#include <stdio.h>
+#include <stdlib.h>
+// Function to create a file (or truncate if it exists)
+void createFile(const char *filename) {
+    FILE *fp = fopen(filename, "w"); // "w" mode creates/truncates the file
+    if (fp == NULL) {
+        perror("Error creating file");
+        exit(EXIT_FAILURE);
+    }
+    printf("File '%s' created successfully.\n", filename);
+    fclose(fp);
+}
+// Function to write data to a file (overwrites existing content)
+void writeToFile(const char *filename) {
+    char data[1000];
+    FILE *fp = fopen(filename, "w"); // "w" mode for writing (overwrites file)
+    if (fp == NULL) {
+        perror("Error opening file for writing");
+        exit(EXIT_FAILURE);
+    }
+    printf("Enter data to write to the file:\n");
+    fgets(data, sizeof(data), stdin);  // gets a line of input from the user
+    fprintf(fp, "%s", data);
+    printf("Data written to file '%s'.\n", filename);
+    fclose(fp);
+}
+
+// Function to read and display data from a file
+void readFromFile(const char *filename) {
+    char ch;
+    FILE *fp = fopen(filename, "r"); // "r" mode for reading
+    if (fp == NULL) {
+        perror("Error opening file for reading");
+        exit(EXIT_FAILURE);
+    }
+    printf("\nReading from file '%s':\n", filename);
+    // Read the file character by character until end-of-file
+    while ((ch = fgetc(fp)) != EOF) {
+        putchar(ch);
+    }
+    printf("\n"); // New line after reading the file
+    fclose(fp);
+}
+// Function to append data to the end of a file
+void appendToFile(const char *filename) {
+    char data[1000];
+    FILE *fp = fopen(filename, "a"); // "a" mode for appending
+    if (fp == NULL) {
+        perror("Error opening file for appending");
+        exit(EXIT_FAILURE);
+    }
+    printf("Enter data to append to the file:\n");
+    fgets(data, sizeof(data), stdin);
+    fprintf(fp, "%s", data);
+    printf("Data appended to file '%s'.\n", filename);
+    fclose(fp);
+}
+
+int main() {
+    char filename[100];
+    int choice;
+
+    while (1) {
+        printf("\nFile Handling Menu:\n");
+        printf("1. Create File\n");
+        printf("2. Write to File\n");
+        printf("3. Read from File\n");
+        printf("4. Append to File\n");
+        printf("5. Exit\n");
+        printf("Enter your choice (1-5): ");
+        scanf("%d", &choice);
+        getchar();  // Consume leftover newline character from input
+
+        // Depending on the choice, ask for a filename and perform the operation.
+        if (choice == 1) {
+            printf("Enter filename to create: ");
+            scanf("%s", filename);
+            getchar();  // Clear newline
+            createFile(filename);
+        } else if (choice == 2) {
+            printf("Enter filename to write to: ");
+            scanf("%s", filename);
+            getchar();
+            writeToFile(filename);
+        } else if (choice == 3) {
+            printf("Enter filename to read from: ");
+            scanf("%s", filename);
+            getchar();
+            readFromFile(filename);
+        } else if (choice == 4) {
+            printf("Enter filename to append to: ");
+            scanf("%s", filename);
+            getchar();
+            appendToFile(filename);
+        } else if (choice == 5) {
+            printf("Exiting program.\n");
+            break;
+        } else {
+            printf("Invalid choice, please try again.\n");
+        }
+    }
+    return 0;
+}
